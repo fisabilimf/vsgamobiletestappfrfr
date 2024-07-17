@@ -1,5 +1,7 @@
 package com.example.vsgatestmobileapp1.model;
 
+import android.content.ContentValues;
+
 public class Note {
     private long id;
     private String title;
@@ -10,7 +12,8 @@ public class Note {
     private String dateUpdated;
     private String username;
 
-    // Getters and setters
+    // Getters and Setters
+
     public long getId() {
         return id;
     }
@@ -73,5 +76,17 @@ public class Note {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public static ContentValues toContentValues(Note note) {
+        ContentValues values = new ContentValues();
+        values.put("title", note.getTitle());
+        values.put("subtitle", note.getSubtitle());
+        values.put("content", note.getContent());
+        values.put("image_url", note.getImageUrl());
+        values.put("date_created", note.getDateCreated());
+        values.put("date_updated", note.getDateUpdated());
+        values.put("username", note.getUsername());
+        return values;
     }
 }

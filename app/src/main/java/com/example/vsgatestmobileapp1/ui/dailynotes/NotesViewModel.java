@@ -1,8 +1,6 @@
 package com.example.vsgatestmobileapp1.ui.dailynotes;
 
 import android.app.Application;
-import android.database.Cursor;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -11,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.vsgatestmobileapp1.database.NoteDatabaseHelper;
 import com.example.vsgatestmobileapp1.model.Note;
 
+import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class NotesViewModel extends AndroidViewModel {
         return notesLiveData;
     }
 
-    private void loadNotes() {
+    public void loadNotes() {
         List<Note> notes = new ArrayList<>();
         Cursor cursor = dbHelper.getReadableDatabase().query(
                 NoteDatabaseHelper.TABLE_NOTES,
@@ -68,5 +67,26 @@ public class NotesViewModel extends AndroidViewModel {
         }
 
         notesLiveData.setValue(notes);
+    }
+
+    public void addNote(Note note) {
+        // Insert the new note into the database
+        dbHelper.getWritableDatabase().insert(NoteDatabaseHelper.TABLE_NOTES, null, Note.toContentValues(note));
+        // Refresh the notes list
+        loadNotes();
+    }
+
+    public void updateNote(Note note) {
+        // Update the note in the database
+        dbHelper.getWritableDatabase().update(NoteDatabaseHelper.TABLE_NOTES, Note.toContentValues(note), NoteDatabaseHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(note.getId())});
+        // Refresh the notes list
+        loadNotes();
+    }
+
+    public void deleteNote(Note note) {
+        // Delete the note from the database
+        dbHelper.getWritableDatabase().delete(NoteDatabaseHelper.TABLE_NOTES, NoteDatabaseHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(note.getId())});
+        // Refresh the notes list
+        loadNotes();
     }
 }

@@ -5,7 +5,9 @@ plugins {
 android {
     namespace 'com.example.vsgatestmobileapp1'
     compileSdk 34
-
+    buildFeatures {
+        dataBinding = true
+    }
     defaultConfig {
         applicationId "com.example.vsgatestmobileapp1"
         minSdk 24

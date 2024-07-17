@@ -1,5 +1,6 @@
 package com.example.vsgatestmobileapp1.ui.dailynotes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,25 @@ public class DailyNotesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_dailyNotesFragment_to_noteEditorActivity);
+            }
+        });
+
+        notesAdapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(Note note) {
+                Intent intent = new Intent(getActivity(), NoteEditorActivity.class);
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_ID, note.getId());
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_TITLE, note.getTitle());
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_SUBTITLE, note.getSubtitle());
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_CONTENT, note.getContent());
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_IMAGE_URL, note.getImageUrl());
+                intent.putExtra(NoteEditorActivity.EXTRA_NOTE_USERNAME, note.getUsername());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDeleteClick(Note note) {
+                notesViewModel.deleteNote(note);
             }
         });
 
