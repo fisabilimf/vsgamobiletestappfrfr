@@ -6,21 +6,21 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_daily_notes"
-        app:layout_anchorGravity="bottom|end"
-        app:backgroundTint="@color/teal_200" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_notes"
+        android:id="@+id/recyclerViewNotes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="8dp"
         android:scrollbars="vertical" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_daily_notes"
+        android:contentDescription="Add Note" />
 </LinearLayout>
