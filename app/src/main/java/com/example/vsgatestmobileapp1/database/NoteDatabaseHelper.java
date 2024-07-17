@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class NoteDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "notes.db";
-    private static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "notes.db";
+    public static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_NOTES = "notes";
     public static final String COLUMN_ID = "_id";
@@ -27,7 +27,8 @@ public class NoteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_DATE_CREATED + " TEXT, " +
                     COLUMN_DATE_UPDATED + " TEXT, " +
-                    COLUMN_USERNAME + " TEXT);";
+                    COLUMN_USERNAME + " TEXT" +
+                    ")";
 
     public NoteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

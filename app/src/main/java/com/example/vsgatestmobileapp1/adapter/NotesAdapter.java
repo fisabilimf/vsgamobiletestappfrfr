@@ -46,10 +46,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> 
         notifyDataSetChanged();
     }
 
-    public Note getNoteAt(int position) {
-        return notes.get(position);
-    }
-
     class NoteHolder extends RecyclerView.ViewHolder {
         private TextView textViewTitle;
         private TextView textViewSubtitle;
@@ -66,6 +62,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> 
             textViewUsername = itemView.findViewById(R.id.text_view_username);
             buttonEdit = itemView.findViewById(R.id.button_edit);
             buttonDelete = itemView.findViewById(R.id.button_delete);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(notes.get(position));
+                    }
+                }
+            });
 
             buttonEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,6 +96,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> 
     }
 
     public interface OnItemClickListener {
+        void onItemClick(Note note);
         void onEditClick(Note note);
         void onDeleteClick(Note note);
     }

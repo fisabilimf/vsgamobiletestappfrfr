@@ -54,6 +54,20 @@ public class DailyNotesFragment extends Fragment {
 
         notesAdapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
+            public void onItemClick(Note note) {
+                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.getId());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_TITLE, note.getTitle());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_SUBTITLE, note.getSubtitle());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_CONTENT, note.getContent());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_IMAGE_URL, note.getImageUrl());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_USERNAME, note.getUsername());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_DATE_CREATED, note.getDateCreated());
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_DATE_UPDATED, note.getDateUpdated());
+                startActivity(intent);
+            }
+
+            @Override
             public void onEditClick(Note note) {
                 Intent intent = new Intent(getActivity(), NoteEditorActivity.class);
                 intent.putExtra(NoteEditorActivity.EXTRA_NOTE_ID, note.getId());
@@ -79,6 +93,12 @@ public class DailyNotesFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        notesViewModel.loadNotes(); // Reload the notes when the fragment is resumed
     }
 
     @Override

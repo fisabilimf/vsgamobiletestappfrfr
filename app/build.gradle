@@ -6,7 +6,7 @@ android {
     namespace 'com.example.vsgatestmobileapp1'
     compileSdk 34
     buildFeatures {
-        dataBinding = true
+        dataBinding true
     }
     defaultConfig {
         applicationId "com.example.vsgatestmobileapp1"

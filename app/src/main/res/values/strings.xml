@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">MyApp</string>
     <string name="logo_description">App Logo</string>
     <string name="email_hint">Enter your email</string>
     <string name="password_hint">Enter your password</string>
@@ -39,5 +38,7 @@
     <string name="decimal">.</string>
     <string name="backspace">⌫</string>
     <string name="sign_out">Sign Out</string>
+    <string name="app_name">VSGA Test Mobile App</string>
     <string name="add_note">Add Note</string>
+    <string name="note_image">Note Image</string>
 </resources>

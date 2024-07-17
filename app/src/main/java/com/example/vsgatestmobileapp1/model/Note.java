@@ -13,7 +13,6 @@ public class Note {
     private String username;
 
     // Getters and Setters
-
     public long getId() {
         return id;
     }

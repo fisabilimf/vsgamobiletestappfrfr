@@ -32,28 +32,21 @@ public class NoteDao {
         database = dbHelper.getWritableDatabase();
     }
 
-    public Note createNote(String title, String subtitle, String content, String imageUrl, String username) {
+    public long createNote(Note note) {
         ContentValues values = new ContentValues();
-        values.put(NoteDatabaseHelper.COLUMN_TITLE, title);
-        values.put(NoteDatabaseHelper.COLUMN_SUBTITLE, subtitle);
-        values.put(NoteDatabaseHelper.COLUMN_CONTENT, content);
-        values.put(NoteDatabaseHelper.COLUMN_IMAGE_URL, imageUrl);
+        values.put(NoteDatabaseHelper.COLUMN_TITLE, note.getTitle());
+        values.put(NoteDatabaseHelper.COLUMN_SUBTITLE, note.getSubtitle());
+        values.put(NoteDatabaseHelper.COLUMN_CONTENT, note.getContent());
+        values.put(NoteDatabaseHelper.COLUMN_IMAGE_URL, note.getImageUrl());
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         values.put(NoteDatabaseHelper.COLUMN_DATE_CREATED, date);
         values.put(NoteDatabaseHelper.COLUMN_DATE_UPDATED, date);
-        values.put(NoteDatabaseHelper.COLUMN_USERNAME, username);
+        values.put(NoteDatabaseHelper.COLUMN_USERNAME, note.getUsername());
 
-        long insertId = database.insert(NoteDatabaseHelper.TABLE_NOTES, null, values);
-        Cursor cursor = database.query(NoteDatabaseHelper.TABLE_NOTES, allColumns,
-                NoteDatabaseHelper.COLUMN_ID + " = " + insertId, null, null, null, null);
-        cursor.moveToFirst();
-        Note newNote = cursorToNote(cursor);
-        cursor.close();
-        return newNote;
+        return database.insert(NoteDatabaseHelper.TABLE_NOTES, null, values);
     }
 
-    public void updateNote(Note note) {
-        long id = note.getId();
+    public int updateNote(Note note) {
         ContentValues values = new ContentValues();
         values.put(NoteDatabaseHelper.COLUMN_TITLE, note.getTitle());
         values.put(NoteDatabaseHelper.COLUMN_SUBTITLE, note.getSubtitle());
@@ -62,38 +55,39 @@ public class NoteDao {
         values.put(NoteDatabaseHelper.COLUMN_DATE_UPDATED, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
         values.put(NoteDatabaseHelper.COLUMN_USERNAME, note.getUsername());
 
-        database.update(NoteDatabaseHelper.TABLE_NOTES, values, NoteDatabaseHelper.COLUMN_ID + " = " + id, null);
+        return database.update(NoteDatabaseHelper.TABLE_NOTES, values, NoteDatabaseHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(note.getId())});
     }
 
     public void deleteNote(Note note) {
-        long id = note.getId();
-        database.delete(NoteDatabaseHelper.TABLE_NOTES, NoteDatabaseHelper.COLUMN_ID + " = " + id, null);
+        database.delete(NoteDatabaseHelper.TABLE_NOTES, NoteDatabaseHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(note.getId())});
     }
 
     public List<Note> getAllNotes() {
         List<Note> notes = new ArrayList<>();
         Cursor cursor = database.query(NoteDatabaseHelper.TABLE_NOTES, allColumns, null, null, null, null, NoteDatabaseHelper.COLUMN_DATE_CREATED + " DESC");
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            Note note = cursorToNote(cursor);
-            notes.add(note);
-            cursor.moveToNext();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Note note = cursorToNote(cursor);
+                notes.add(note);
+                cursor.moveToNext();
+            }
+            cursor.close();
         }
-        cursor.close();
         return notes;
     }
 
     private Note cursorToNote(Cursor cursor) {
         Note note = new Note();
-        note.setId(cursor.getLong(0));
-        note.setTitle(cursor.getString(1));
-        note.setSubtitle(cursor.getString(2));
-        note.setContent(cursor.getString(3));
-        note.setImageUrl(cursor.getString(4));
-        note.setDateCreated(cursor.getString(5));
-        note.setDateUpdated(cursor.getString(6));
-        note.setUsername(cursor.getString(7));
+        note.setId(cursor.getLong(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_ID)));
+        note.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_TITLE)));
+        note.setSubtitle(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_SUBTITLE)));
+        note.setContent(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_CONTENT)));
+        note.setImageUrl(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_IMAGE_URL)));
+        note.setDateCreated(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_DATE_CREATED)));
+        note.setDateUpdated(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_DATE_UPDATED)));
+        note.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(NoteDatabaseHelper.COLUMN_USERNAME)));
         return note;
     }
 }

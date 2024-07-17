@@ -45,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Navigate to NoteEditorActivity to create a new note
-                Intent intent = new Intent(MainActivity.this, NoteEditorActivity.class);
-                startActivity(intent);
-            }
-        });
+//        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Navigate to NoteEditorActivity to create a new note
+//                Intent intent = new Intent(MainActivity.this, NoteEditorActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;

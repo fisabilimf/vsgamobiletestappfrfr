@@ -2,7 +2,6 @@ package com.example.vsgatestmobileapp1.ui.dailynotes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
@@ -49,27 +48,14 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_NOTE_ID)) {
-            setTitle("Edit Note");
-            long id = intent.getLongExtra(EXTRA_NOTE_ID, -1);
-            String title = intent.getStringExtra(EXTRA_NOTE_TITLE);
-            String subtitle = intent.getStringExtra(EXTRA_NOTE_SUBTITLE);
-            String content = intent.getStringExtra(EXTRA_NOTE_CONTENT);
-            String imageUrl = intent.getStringExtra(EXTRA_NOTE_IMAGE_URL);
-            String username = intent.getStringExtra(EXTRA_NOTE_USERNAME);
-
             note = new Note();
-            note.setId(id);
-            note.setTitle(title);
-            note.setSubtitle(subtitle);
-            note.setContent(content);
-            note.setImageUrl(imageUrl);
-            note.setUsername(username);
-
-            editTextTitle.setText(title);
-            editTextSubtitle.setText(subtitle);
-            editTextContent.setText(content);
+            note.setId(intent.getIntExtra(EXTRA_NOTE_ID, 0));
+            editTextTitle.setText(intent.getStringExtra(EXTRA_NOTE_TITLE));
+            editTextSubtitle.setText(intent.getStringExtra(EXTRA_NOTE_SUBTITLE));
+            editTextContent.setText(intent.getStringExtra(EXTRA_NOTE_CONTENT));
+            note.setImageUrl(intent.getStringExtra(EXTRA_NOTE_IMAGE_URL));
+            note.setUsername(intent.getStringExtra(EXTRA_NOTE_USERNAME));
         } else {
-            setTitle("Add Note");
             note = new Note();
         }
 
@@ -82,11 +68,11 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        String title = editTextTitle.getText().toString();
-        String subtitle = editTextSubtitle.getText().toString();
-        String content = editTextContent.getText().toString();
-        String imageUrl = ""; // Handle image selection/uploading
-        String username = "User"; // Replace with actual username handling
+        String title = editTextTitle.getText().toString().trim();
+        String subtitle = editTextSubtitle.getText().toString().trim();
+        String content = editTextContent.getText().toString().trim();
+        String imageUrl = ""; // Update this if you implement image URL logic
+        String username = ""; // Update this to actual username
 
         note.setTitle(title);
         note.setSubtitle(subtitle);
