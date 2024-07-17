@@ -9,12 +9,20 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_calculator"
             android:icon="@drawable/ic_calculator"
             android:title="@string/calculator" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_daily_notes"
             android:icon="@drawable/ic_daily_notes"
             android:title="@string/daily_notes" />
     </group>
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_sign_out"
+                android:icon="@drawable/ic_sign_out"
+                android:title="@string/sign_out" />
+        </menu>
+    </item>
 </menu>

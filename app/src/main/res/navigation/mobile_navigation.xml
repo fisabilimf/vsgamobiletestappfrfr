@@ -9,17 +9,36 @@
         android:id="@+id/nav_home"
         android:name="com.example.vsgatestmobileapp1.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_calculatorFragment"
+            app:destination="@id/nav_calculator" />
+        <action
+            android:id="@+id/action_homeFragment_to_slideshowFragment"
+            app:destination="@id/nav_slideshow" />
+        <action
+            android:id="@+id/action_homeFragment_to_dailyNotesFragment"
+            app:destination="@id/nav_daily_notes" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.vsgatestmobileapp1.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_calculator"
+        android:name="com.example.vsgatestmobileapp1.ui.calculator.CalculatorFragment"
+        android:label="@string/calculator"
+        tools:layout="@layout/fragment_calculator" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.vsgatestmobileapp1.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_daily_notes"
+        android:name="com.example.vsgatestmobileapp1.ui.dailynotes.DailyNotesFragment"
+        android:label="Daily Notes"
+        tools:layout="@layout/fragment_daily_notes" />
+
+
+    <!-- Define other fragments if needed -->
 </navigation>
