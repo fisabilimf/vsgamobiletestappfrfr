@@ -1,8 +1,6 @@
 package com.example.vsgatestmobileapp1.ui.dailynotes;
 
 import android.app.Application;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -14,8 +12,9 @@ import com.example.vsgatestmobileapp1.model.Note;
 import java.util.List;
 
 public class NotesViewModel extends AndroidViewModel {
-    private MutableLiveData<List<Note>> notesLiveData;
+
     private NoteDao noteDao;
+    private MutableLiveData<List<Note>> notesLiveData;
 
     public NotesViewModel(@NonNull Application application) {
         super(application);
@@ -29,30 +28,16 @@ public class NotesViewModel extends AndroidViewModel {
     }
 
     public void loadNotes() {
-        List<Note> notes = noteDao.getAllNotes();
-        notesLiveData.postValue(notes);
+        notesLiveData.setValue(noteDao.getAllNotes());
     }
 
-    public void addNote(Note note) {
-        long id = noteDao.createNote(note);
-        if (id != -1) {
-            loadNotes(); // Refresh the notes list
-        } else {
-            Log.d("NotesViewModel", "Failed to add note");
-        }
-    }
-
-    public void updateNote(Note note) {
-        int rowsAffected = noteDao.updateNote(note);
-        if (rowsAffected > 0) {
-            loadNotes(); // Refresh the notes list
-        } else {
-            Log.d("NotesViewModel", "Failed to update note");
-        }
+    public void addOrUpdateNote(Note note) {
+        noteDao.createOrUpdateNote(note.getTitle(), note.getSubtitle(), note.getContent(), note.getImageUrl(), note.getUsername());
+        loadNotes();
     }
 
     public void deleteNote(Note note) {
         noteDao.deleteNote(note);
-        loadNotes(); // Refresh the notes list
+        loadNotes();
     }
 }

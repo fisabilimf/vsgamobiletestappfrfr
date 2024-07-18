@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.vsgatestmobileapp1.databinding.ActivityMainBinding;
-import com.example.vsgatestmobileapp1.ui.dailynotes.NoteEditorActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-//        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Navigate to NoteEditorActivity to create a new note
-//                Intent intent = new Intent(MainActivity.this, NoteEditorActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -86,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return NavigationUI.onNavDestinationSelected(item, navController)
                         || MainActivity.super.onOptionsItemSelected(item);
+            }
+        });
+
+        // Handle button click to open OSM map
+        Button buttonOpenOsmMap = findViewById(R.id.button_open_osm_map);
+        buttonOpenOsmMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OsmMapActivity.class);
+                startActivity(intent);
             }
         });
     }

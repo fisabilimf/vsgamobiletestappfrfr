@@ -1,40 +1,37 @@
 package com.example.vsgatestmobileapp1.ui.dailynotes;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Button;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
-import androidx.lifecycle.ViewModelProvider;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.vsgatestmobileapp1.R;
+import com.example.vsgatestmobileapp1.database.NoteDao;
 import com.example.vsgatestmobileapp1.model.Note;
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.google.android.material.button.MaterialButton;
 
 public class NoteEditorActivity extends AppCompatActivity {
-    public static final String EXTRA_NOTE_ID = "com.example.vsgatestmobileapp1.EXTRA_NOTE_ID";
-    public static final String EXTRA_NOTE_TITLE = "com.example.vsgatestmobileapp1.EXTRA_NOTE_TITLE";
-    public static final String EXTRA_NOTE_SUBTITLE = "com.example.vsgatestmobileapp1.EXTRA_NOTE_SUBTITLE";
-    public static final String EXTRA_NOTE_CONTENT = "com.example.vsgatestmobileapp1.EXTRA_NOTE_CONTENT";
-    public static final String EXTRA_NOTE_IMAGE_URL = "com.example.vsgatestmobileapp1.EXTRA_NOTE_IMAGE_URL";
-    public static final String EXTRA_NOTE_USERNAME = "com.example.vsgatestmobileapp1.EXTRA_NOTE_USERNAME";
 
-    private TextInputEditText editTextTitle;
-    private TextInputEditText editTextSubtitle;
-    private TextInputEditText editTextContent;
+    public static final String EXTRA_NOTE_ID = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_ID";
+    public static final String EXTRA_NOTE_TITLE = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_TITLE";
+    public static final String EXTRA_NOTE_SUBTITLE = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_SUBTITLE";
+    public static final String EXTRA_NOTE_CONTENT = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_CONTENT";
+    public static final String EXTRA_NOTE_IMAGE_URL = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_IMAGE_URL";
+    public static final String EXTRA_NOTE_USERNAME = "com.example.vsgatestmobileapp1.ui.dailynotes.EXTRA_NOTE_USERNAME";
+
+    private EditText editTextTitle;
+    private EditText editTextSubtitle;
+    private EditText editTextContent;
     private ImageView imageViewNote;
-    private Button buttonSaveNote;
-    private NotesViewModel notesViewModel;
-    private Note note;
+    private NoteDao noteDao;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
 
@@ -42,52 +39,41 @@ public class NoteEditorActivity extends AppCompatActivity {
         editTextSubtitle = findViewById(R.id.input_note_subtitle);
         editTextContent = findViewById(R.id.input_note_content);
         imageViewNote = findViewById(R.id.image_view_note);
-        buttonSaveNote = findViewById(R.id.button_save_note);
 
-        notesViewModel = new ViewModelProvider(this).get(NotesViewModel.class);
+        noteDao = new NoteDao(this);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_NOTE_ID)) {
-            note = new Note();
-            note.setId(intent.getIntExtra(EXTRA_NOTE_ID, 0));
-            editTextTitle.setText(intent.getStringExtra(EXTRA_NOTE_TITLE));
-            editTextSubtitle.setText(intent.getStringExtra(EXTRA_NOTE_SUBTITLE));
-            editTextContent.setText(intent.getStringExtra(EXTRA_NOTE_CONTENT));
-            note.setImageUrl(intent.getStringExtra(EXTRA_NOTE_IMAGE_URL));
-            note.setUsername(intent.getStringExtra(EXTRA_NOTE_USERNAME));
-        } else {
-            note = new Note();
-        }
-
-        buttonSaveNote.setOnClickListener(new View.OnClickListener() {
+        MaterialButton buttonSave = findViewById(R.id.button_save_note);
+        buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveNote();
             }
         });
+
+        // Load existing note data if editing
+        if (getIntent().hasExtra(EXTRA_NOTE_ID)) {
+            editTextTitle.setText(getIntent().getStringExtra(EXTRA_NOTE_TITLE));
+            editTextSubtitle.setText(getIntent().getStringExtra(EXTRA_NOTE_SUBTITLE));
+            editTextContent.setText(getIntent().getStringExtra(EXTRA_NOTE_CONTENT));
+            // Load the image URL if necessary
+        }
     }
 
     private void saveNote() {
         String title = editTextTitle.getText().toString().trim();
         String subtitle = editTextSubtitle.getText().toString().trim();
         String content = editTextContent.getText().toString().trim();
-        String imageUrl = ""; // Update this if you implement image URL logic
-        String username = ""; // Update this to actual username
+        String imageUrl = ""; // Implement image URL handling as needed
+        SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String username = preferences.getString("user_username", "Username");
 
-        note.setTitle(title);
-        note.setSubtitle(subtitle);
-        note.setContent(content);
-        note.setImageUrl(imageUrl);
-        note.setUsername(username);
-        note.setDateUpdated(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
-
-        if (note.getId() == 0) {
-            note.setDateCreated(note.getDateUpdated());
-            notesViewModel.addNote(note);
-        } else {
-            notesViewModel.updateNote(note);
+        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
+            Toast.makeText(this, "Please enter a title and content", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        noteDao.createOrUpdateNote(title, subtitle, content, imageUrl, username);
+        Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show();
         finish();
     }
 }
