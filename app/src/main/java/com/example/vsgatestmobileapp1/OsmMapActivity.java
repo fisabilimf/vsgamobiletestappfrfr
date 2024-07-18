@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -21,6 +22,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.io.File;
 
 public class OsmMapActivity extends FragmentActivity {
 
@@ -32,11 +35,21 @@ public class OsmMapActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize the osmdroid configuration
         Configuration.getInstance().load(this, getPreferences(MODE_PRIVATE));
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        // Set cache location
+        File osmdroidCache = new File(getCacheDir(), "osmdroid");
+        Configuration.getInstance().setOsmdroidBasePath(osmdroidCache);
+        Configuration.getInstance().setOsmdroidTileCache(osmdroidCache);
+
         setContentView(R.layout.activity_osm_map);
 
         mapView = findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -64,6 +77,7 @@ public class OsmMapActivity extends FragmentActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Call super method
         locationPermissionGranted = false;
         if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0
